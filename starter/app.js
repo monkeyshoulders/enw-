@@ -107,8 +107,10 @@ var UIController = (function() {
     expenseContainer: '.expenses__list',
     budgetLabel: '.budget__value',
     incomeLabel: '.budget__income--value',
-    expensesLabel: '.budget__expenses==percentage',
-    percentageLabel: '.budget__expenses--percentage'
+    expensesLabel: '.budget__expenses--value',
+    percentageLabel: '.budget__expenses--percentage',
+    container: '.container',
+    close: '.ion-ios-close-outline'
   }
 
   return {
@@ -143,6 +145,10 @@ var UIController = (function() {
 
     },
 
+    deleteListItem: function() {
+      
+    },
+
     clearFields: function() {
       var fields, fieldsArr;
 
@@ -158,11 +164,16 @@ var UIController = (function() {
     },
 
     displayBudget: function(obj) {
-      
+
       document.querySelector(DOMStrings.budgetLabel).textContent = obj.budget;
       document.querySelector(DOMStrings.incomeLabel).textContent = obj.totalInc;
       document.querySelector(DOMStrings.expensesLabel).textContent = obj.totalExp;
-      document.querySelector(DOMStrings.percentageLabel).textContent = obj.percentage;
+
+      if (obj.percentage > 0) {
+        document.querySelector(DOMStrings.percentageLabel).textContent = `${obj.percentage}%`;
+      } else {
+        document.querySelector(DOMStrings.percentageLabel).textContent = `---`;
+      }
     },
 
     getDOMStrings: function () {
@@ -184,7 +195,10 @@ var controller = (function(budgetCtrl, UICtrl) {
         ctrlAddItem();
       }
     });
+
+    document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
   };
+
 
   const updateBudget = function() {
 
@@ -221,9 +235,31 @@ var controller = (function(budgetCtrl, UICtrl) {
       
   };
 
+  const ctrlDeleteItem = function(event) {
+    var itemID, splitID, type, ID;
+    itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+    if (itemID) {
+      splitID = itemID.split('-');
+      type = splitId[0];
+      ID = splitID[1];
+
+
+    } else {
+      
+    }
+
+  };
+
   return {
     init: function() {
       console.log('started');
+      UICtrl.displayBudget({
+        budget: 0,
+        totalInc: 0,
+        totalExp: 0,
+        percentage: -1
+      });
       setupEventListeners();
     }
   }
